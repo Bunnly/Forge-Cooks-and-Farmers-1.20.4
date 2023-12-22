@@ -1,0 +1,6 @@
+{
+  "parent" : "caf:block/wooden_crate",
+  "textures": {
+    "all" : "minecraft:block/oak_planks"
+  }
+}

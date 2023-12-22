@@ -1,6 +1,9 @@
 package net.bunnly.caf;
 
 import com.mojang.logging.LogUtils;
+import net.bunnly.caf.block.CafBlocks;
+import net.bunnly.caf.item.CafCreativeTabs;
+import net.bunnly.caf.item.CafItems;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -28,10 +31,15 @@ public class CooksAndFarmers
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        CafCreativeTabs.register(modEventBus);
+
+        CafItems.register(modEventBus);
+
+        CafBlocks.register(modEventBus);
+
         modEventBus.addListener(this::commonSetup);
 
         MinecraftForge.EVENT_BUS.register(this);
-
         modEventBus.addListener(this::addCreative);
     }
 
