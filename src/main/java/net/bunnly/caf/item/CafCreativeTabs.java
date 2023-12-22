@@ -15,7 +15,7 @@ public class CafCreativeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
             DeferredRegister.create(Registries.CREATIVE_MODE_TAB, CooksAndFarmers.MOD_ID);
 
-    public static final RegistryObject<CreativeModeTab> CAF_TAB = CREATIVE_MODE_TABS.register("Cooks and Farmers",
+    public static final RegistryObject<CreativeModeTab> CAF_TAB = CREATIVE_MODE_TABS.register("caf",
             () -> CreativeModeTab.builder().icon(() -> new ItemStack(Items.WHEAT)).
                     title(Component.translatable("creativetab.caf")).
                     displayItems((pParameters, pOutput) -> {

@@ -34,7 +34,6 @@ public class CooksAndFarmers
         CafCreativeTabs.register(modEventBus);
 
         CafItems.register(modEventBus);
-
         CafBlocks.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
