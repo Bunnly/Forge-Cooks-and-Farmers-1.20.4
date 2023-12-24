@@ -2,8 +2,12 @@ package net.bunnly.caf;
 
 import com.mojang.logging.LogUtils;
 import net.bunnly.caf.block.CafBlocks;
+import net.bunnly.caf.block.entity.CafBlockEntities;
 import net.bunnly.caf.item.CafCreativeTabs;
 import net.bunnly.caf.item.CafItems;
+import net.bunnly.caf.screen.CafMenuTypes;
+import net.bunnly.caf.screen.CuttingBoardScreen;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -36,6 +40,9 @@ public class CooksAndFarmers
         CafItems.register(modEventBus);
         CafBlocks.register(modEventBus);
 
+        CafBlockEntities.register(modEventBus);
+        CafMenuTypes.register(modEventBus);
+
         modEventBus.addListener(this::commonSetup);
 
         MinecraftForge.EVENT_BUS.register(this);
@@ -67,7 +74,7 @@ public class CooksAndFarmers
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
-
+            MenuScreens.register(CafMenuTypes.CUTTING_BOARD_MENU.get(), CuttingBoardScreen::new);
         }
     }
 }
