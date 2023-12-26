@@ -22,7 +22,7 @@ public class CuttingBoardMenu extends AbstractContainerMenu {
     }
 
     public CuttingBoardMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
-        super(CafMenuTypes.GEM_POLISHING_MENU.get(), pContainerId);
+        super(CafMenuTypes.CUTTING_BOARD_MENU.get(), pContainerId);
         checkContainerSize(inv, 2);
         blockEntity = ((CuttingBoardBlockEntity) entity);
         this.level = inv.player.level();
