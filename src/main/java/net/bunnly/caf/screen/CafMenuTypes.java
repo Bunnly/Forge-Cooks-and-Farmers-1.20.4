@@ -17,11 +17,12 @@ public class CafMenuTypes {
     public static final RegistryObject<MenuType<CuttingBoardMenu>> CUTTING_BOARD_MENU =
             registerMenuType("cutting_board_menu", CuttingBoardMenu::new);
 
-    private static <T extends AbstractContainerMenu>RegistryObject<MenuType<T>> registerMenuType(String name, IContainerFactory<T> factory){
+
+    private static <T extends AbstractContainerMenu>RegistryObject<MenuType<T>> registerMenuType(String name, IContainerFactory<T> factory) {
         return MENUS.register(name, () -> IForgeMenuType.create(factory));
     }
 
-    public static void register(IEventBus eventBus){
+    public static void register(IEventBus eventBus) {
         MENUS.register(eventBus);
     }
 }

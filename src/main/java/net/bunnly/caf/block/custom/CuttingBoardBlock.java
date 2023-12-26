@@ -22,10 +22,15 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class CuttingBoardBlock extends BaseEntityBlock {
-    public static final VoxelShape SHAPE = Block.box(1, 0, 1, 14, 2, 14);
+    public static final VoxelShape SHAPE = Block.box(1, 0, 1, 15, 1, 15);
 
     public CuttingBoardBlock(Properties pProperties) {
         super(pProperties);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> m_304657_() {
+        return null;
     }
 
     @Override
@@ -39,19 +44,15 @@ public class CuttingBoardBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected MapCodec<? extends BaseEntityBlock> m_304657_() {
-        return null;
-    }
-
-    @Override
-    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (pState.getBlock() != pNewState.getBlock()) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
             if (blockEntity instanceof CuttingBoardBlockEntity) {
                 ((CuttingBoardBlockEntity) blockEntity).drops();
             }
         }
-        super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
+
+        super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
     }
 
     @Override
@@ -64,6 +65,7 @@ public class CuttingBoardBlock extends BaseEntityBlock {
                 throw new IllegalStateException("Our Container provider is missing!");
             }
         }
+
         return InteractionResult.sidedSuccess(pLevel.isClientSide());
     }
 
@@ -76,9 +78,10 @@ public class CuttingBoardBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        if(pLevel.isClientSide){
+        if(pLevel.isClientSide()) {
             return null;
         }
+
         return createTickerHelper(pBlockEntityType, CafBlockEntities.CUTTING_BOARD_BE.get(),
                 (pLevel1, pPos, pState1, pBlockEntity) -> pBlockEntity.tick(pLevel1, pPos, pState1));
     }

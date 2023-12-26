@@ -27,48 +27,50 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CuttingBoardBlockEntity extends BlockEntity implements MenuProvider {
-    private final ItemStackHandler itemHandler = new ItemStackHandler(5);
+    private final ItemStackHandler itemHandler = new ItemStackHandler(2);
 
-    private static final int OUTPUT_SLOT_1 = 0;
-    private static final int OUTPUT_SLOT_2 = 1;
-    private static final int OUTPUT_SLOT_3 = 2;
-    private static final int OUTPUT_SLOT_4 = 3;
+    private static final int INPUT_SLOT = 0;
+    private static final int OUTPUT_SLOT = 1;
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
     protected final ContainerData data;
     private int progress = 0;
+    private int maxProgress = 78;
 
     public CuttingBoardBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(CafBlockEntities.CUTTING_BOARD_BE.get(), pPos, pBlockState);
         this.data = new ContainerData() {
             @Override
             public int get(int pIndex) {
-                return switch (pIndex){
+                return switch (pIndex) {
                     case 0 -> CuttingBoardBlockEntity.this.progress;
+                    case 1 -> CuttingBoardBlockEntity.this.maxProgress;
                     default -> 0;
                 };
             }
 
             @Override
             public void set(int pIndex, int pValue) {
-                switch (pIndex){
+                switch (pIndex) {
                     case 0 -> CuttingBoardBlockEntity.this.progress = pValue;
+                    case 1 -> CuttingBoardBlockEntity.this.maxProgress = pValue;
                 }
             }
 
             @Override
             public int getCount() {
-                return 5;
+                return 2;
             }
         };
     }
 
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if(cap == ForgeCapabilities.ITEM_HANDLER){
+        if(cap == ForgeCapabilities.ITEM_HANDLER) {
             return lazyItemHandler.cast();
         }
+
         return super.getCapability(cap, side);
     }
 
@@ -84,18 +86,17 @@ public class CuttingBoardBlockEntity extends BlockEntity implements MenuProvider
         lazyItemHandler.invalidate();
     }
 
-    public void drops(){
+    public void drops() {
         SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots());
-        for(int i = 0; i < itemHandler.getSlots(); i++){
+        for(int i = 0; i < itemHandler.getSlots(); i++) {
             inventory.setItem(i, itemHandler.getStackInSlot(i));
         }
-
         Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("block.caf.cutting_board");
+        return Component.translatable("block.tutorialmod.gem_polishing_station");
     }
 
     @Nullable
@@ -107,7 +108,7 @@ public class CuttingBoardBlockEntity extends BlockEntity implements MenuProvider
     @Override
     protected void saveAdditional(CompoundTag pTag) {
         pTag.put("inventory", itemHandler.serializeNBT());
-        pTag.putInt("progress", progress);
+        pTag.putInt("gem_polishing_station.progress", progress);
 
         super.saveAdditional(pTag);
     }
@@ -116,47 +117,55 @@ public class CuttingBoardBlockEntity extends BlockEntity implements MenuProvider
     public void load(CompoundTag pTag) {
         super.load(pTag);
         itemHandler.deserializeNBT(pTag.getCompound("inventory"));
-        progress = pTag.getInt("progress");
+        progress = pTag.getInt("gem_polishing_station.progress");
     }
 
     public void tick(Level pLevel, BlockPos pPos, BlockState pState) {
-        if(hasRecipe()){
-            if(hasProgressFinished()){
-                CraftItem();
-                ResetProgress();
+        if(hasRecipe()) {
+            increaseCraftingProgress();
+            setChanged(pLevel, pPos, pState);
+
+            if(hasProgressFinished()) {
+                craftItem();
+                resetProgress();
             }
-        }else{
-            ResetProgress();
+        } else {
+            resetProgress();
         }
     }
 
-    private void ResetProgress() {
+    private void resetProgress() {
         progress = 0;
     }
 
-    private void CraftItem() {
-        ItemStack result_1 = new ItemStack(Items.WHEAT_SEEDS, 1);
-        this.itemHandler.extractItem(5, 1, false);
+    private void craftItem() {
+        ItemStack result = new ItemStack(Items.WHEAT, 1);
+        this.itemHandler.extractItem(INPUT_SLOT, 1, false);
 
-        this.itemHandler.setStackInSlot(OUTPUT_SLOT_1, new ItemStack(result_1.getItem(),
-                this.itemHandler.getStackInSlot(OUTPUT_SLOT_1).getCount() + result_1.getCount()));
-    }
-
-    private boolean hasProgressFinished() {
-        return false;
+        this.itemHandler.setStackInSlot(OUTPUT_SLOT, new ItemStack(result.getItem(),
+                this.itemHandler.getStackInSlot(OUTPUT_SLOT).getCount() + result.getCount()));
     }
 
     private boolean hasRecipe() {
-        boolean hasCraftingItem = this.itemHandler.getStackInSlot(4).getItem() == Items.WHEAT;
-        ItemStack result = new ItemStack(Items.WHEAT_SEEDS);
-        return hasCraftingItem && canInsertAmountIntoOutput(result.getCount()) && canInsertItemIntoOutput(result.getItem());
+        boolean hasCraftingItem = this.itemHandler.getStackInSlot(INPUT_SLOT).getItem() == Items.WHEAT_SEEDS;
+        ItemStack result = new ItemStack(Items.WHEAT);
+
+        return hasCraftingItem && canInsertAmountIntoOutputSlot(result.getCount()) && canInsertItemIntoOutputSlot(result.getItem());
     }
 
-    private boolean canInsertItemIntoOutput(Item item) {
-        return this.itemHandler.getStackInSlot(OUTPUT_SLOT_1).isEmpty() || this.itemHandler.getStackInSlot(OUTPUT_SLOT_1).is(item);
+    private boolean canInsertItemIntoOutputSlot(Item item) {
+        return this.itemHandler.getStackInSlot(OUTPUT_SLOT).isEmpty() || this.itemHandler.getStackInSlot(OUTPUT_SLOT).is(item);
     }
 
-    private boolean canInsertAmountIntoOutput(int count) {
-        return this.itemHandler.getStackInSlot(OUTPUT_SLOT_1).getCount() + count <= this.itemHandler.getStackInSlot(OUTPUT_SLOT_1).getMaxStackSize();
+    private boolean canInsertAmountIntoOutputSlot(int count) {
+        return this.itemHandler.getStackInSlot(OUTPUT_SLOT).getCount() + count <= this.itemHandler.getStackInSlot(OUTPUT_SLOT).getMaxStackSize();
+    }
+
+    private boolean hasProgressFinished() {
+        return progress >= maxProgress;
+    }
+
+    private void increaseCraftingProgress() {
+        progress++;
     }
 }

@@ -12,12 +12,13 @@ public class CafBlockEntities {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, CooksAndFarmers.MOD_ID);
 
-public static final RegistryObject<BlockEntityType<CuttingBoardBlockEntity>> CUTTING_BOARD_BE =
-        BLOCK_ENTITIES.register("cutting_board_be", () ->
-                BlockEntityType.Builder.of(CuttingBoardBlockEntity::new,
-                        CafBlocks.CUTTING_BOARD.get()).build(null));
+    public static final RegistryObject<BlockEntityType<CuttingBoardBlockEntity>> CUTTING_BOARD_BE =
+            BLOCK_ENTITIES.register("gem_polishing_be", () ->
+                    BlockEntityType.Builder.of(CuttingBoardBlockEntity::new,
+                            CafBlocks.CUTTING_BOARD.get()).build(null));
 
-    public static void register(IEventBus eventBus){
+
+    public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);
     }
 }
