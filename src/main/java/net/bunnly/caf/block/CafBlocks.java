@@ -21,11 +21,11 @@ public class CafBlocks {
             DeferredRegister.create(ForgeRegistries.BLOCKS, CooksAndFarmers.MOD_ID);
 
     public static final RegistryObject<Block> OAK_FOOD_CRATE = registerBlock("oak_food_crate",
-            () -> new Block(BlockBehaviour.Properties.m_308003_(Blocks.OAK_PLANKS).sound(SoundType.WOOD)),
+            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).sound(SoundType.WOOD)),
             true);
 
     public static final RegistryObject<Block> CUTTING_BOARD = registerBlock("cutting_board",
-            () -> new CuttingBoardBlock(BlockBehaviour.Properties.m_308003_(Blocks.OAK_PRESSURE_PLATE).sound(SoundType.WOOD)),
+            () -> new CuttingBoardBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PRESSURE_PLATE).sound(SoundType.WOOD)),
             true);
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, Boolean createItem) {

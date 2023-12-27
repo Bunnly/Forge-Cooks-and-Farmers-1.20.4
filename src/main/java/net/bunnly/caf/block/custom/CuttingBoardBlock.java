@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.bunnly.caf.block.entity.CafBlockEntities;
 import net.bunnly.caf.block.entity.CuttingBoardBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -29,7 +30,7 @@ public class CuttingBoardBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected MapCodec<? extends BaseEntityBlock> m_304657_() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return null;
     }
 
@@ -57,12 +58,14 @@ public class CuttingBoardBlock extends BaseEntityBlock {
 
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (!pLevel.isClientSide()) {
-            BlockEntity entity = pLevel.getBlockEntity(pPos);
-            if(entity instanceof CuttingBoardBlockEntity) {
-                pPlayer.openMenu((CuttingBoardBlockEntity)entity);
-            } else {
-                throw new IllegalStateException("Our Container provider is missing!");
+        if(pPlayer instanceof ServerPlayer player){
+            if (!pLevel.isClientSide()) {
+                BlockEntity entity = pLevel.getBlockEntity(pPos);
+                if(entity instanceof CuttingBoardBlockEntity) {
+                    player.openMenu((CuttingBoardBlockEntity)entity, pPos);
+                } else {
+                    throw new IllegalStateException("Our Container provider is missing!");
+                }
             }
         }
 
