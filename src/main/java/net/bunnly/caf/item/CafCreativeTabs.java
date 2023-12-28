@@ -19,6 +19,7 @@ public class CafCreativeTabs {
             () -> CreativeModeTab.builder().icon(() -> new ItemStack(Items.WHEAT)).
                     title(Component.translatable("creativetab.caf")).
                     displayItems((pParameters, pOutput) -> {
+                        pOutput.accept(CafBlocks.CUTTING_BOARD.get());
                         pOutput.accept(CafBlocks.OAK_FOOD_CRATE.get());
                     })
                     .build());

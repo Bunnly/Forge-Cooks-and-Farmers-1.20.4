@@ -18,12 +18,12 @@ public class CuttingBoardMenu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public CuttingBoardMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(2));
+        this(pContainerId, inv, inv.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(5));
     }
 
     public CuttingBoardMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
         super(CafMenuTypes.CUTTING_BOARD_MENU.get(), pContainerId);
-        checkContainerSize(inv, 2);
+        checkContainerSize(inv, 5);
         blockEntity = ((CuttingBoardBlockEntity) entity);
         this.level = inv.player.level();
         this.data = data;
@@ -32,8 +32,10 @@ public class CuttingBoardMenu extends AbstractContainerMenu {
         addPlayerHotbar(inv);
 
         this.blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).ifPresent(iItemHandler -> {
-            this.addSlot(new SlotItemHandler(iItemHandler, 0, 80, 11));
-            this.addSlot(new SlotItemHandler(iItemHandler, 1, 80, 59));
+            this.addSlot(new SlotItemHandler(iItemHandler, 0, 71, 27));
+            this.addSlot(new SlotItemHandler(iItemHandler, 1, 89, 27));
+            this.addSlot(new SlotItemHandler(iItemHandler, 2, 71, 45));
+            this.addSlot(new SlotItemHandler(iItemHandler, 3, 89, 45));
         });
 
         addDataSlots(data);
@@ -41,14 +43,6 @@ public class CuttingBoardMenu extends AbstractContainerMenu {
 
     public boolean isCrafting() {
         return data.get(0) > 0;
-    }
-
-    public int getScaledProgress() {
-        int progress = this.data.get(0);
-        int maxProgress = this.data.get(1);  // Max Progress
-        int progressArrowSize = 26; // This is the height in pixels of your arrow
-
-        return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
@@ -67,7 +61,7 @@ public class CuttingBoardMenu extends AbstractContainerMenu {
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
     // THIS YOU HAVE TO DEFINE!
-    private static final int TE_INVENTORY_SLOT_COUNT = 2;  // must be the number of slots you have!
+    private static final int TE_INVENTORY_SLOT_COUNT = 4;  // must be the number of slots you have!
     @Override
     public ItemStack quickMoveStack(Player playerIn, int pIndex) {
         Slot sourceSlot = slots.get(pIndex);

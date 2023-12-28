@@ -20,8 +20,6 @@ public class CuttingBoardScreen extends AbstractContainerScreen<CuttingBoardMenu
     @Override
     protected void init() {
         super.init();
-        this.inventoryLabelY = 10000;
-        this.titleLabelY = 10000;
     }
 
     @Override
@@ -33,14 +31,6 @@ public class CuttingBoardScreen extends AbstractContainerScreen<CuttingBoardMenu
         int y = (height - imageHeight) / 2;
 
         guiGraphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
-
-        renderProgressArrow(guiGraphics, x, y);
-    }
-
-    private void renderProgressArrow(GuiGraphics guiGraphics, int x, int y) {
-        if(menu.isCrafting()) {
-            guiGraphics.blit(TEXTURE, x + 85, y + 30, 176, 0, 8, menu.getScaledProgress());
-        }
     }
 
     @Override
