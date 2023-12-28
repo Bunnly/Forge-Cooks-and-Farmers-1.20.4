@@ -2,6 +2,7 @@ package net.bunnly.caf.block;
 
 import net.bunnly.caf.CooksAndFarmers;
 import net.bunnly.caf.block.custom.CuttingBoardBlock;
+import net.bunnly.caf.block.custom.WoodenFoodCrate;
 import net.bunnly.caf.item.CafItems;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -21,11 +22,13 @@ public class CafBlocks {
             DeferredRegister.create(ForgeRegistries.BLOCKS, CooksAndFarmers.MOD_ID);
 
     public static final RegistryObject<Block> OAK_FOOD_CRATE = registerBlock("oak_food_crate",
-            () -> new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).sound(SoundType.WOOD)),
+            () -> new WoodenFoodCrate(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).sound(SoundType.WOOD)),
             true);
 
     public static final RegistryObject<Block> CUTTING_BOARD = registerBlock("cutting_board",
-            () -> new CuttingBoardBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PRESSURE_PLATE).sound(SoundType.WOOD)),
+            () -> new CuttingBoardBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).
+                    sound(SoundType.WOOD).explosionResistance(0.5f).
+                    destroyTime(0.5f)),
             true);
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, Boolean createItem) {

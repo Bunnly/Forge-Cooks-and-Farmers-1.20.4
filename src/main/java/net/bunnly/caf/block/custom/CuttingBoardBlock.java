@@ -4,12 +4,14 @@ import com.mojang.serialization.MapCodec;
 import net.bunnly.caf.block.entity.CafBlockEntities;
 import net.bunnly.caf.block.entity.CuttingBoardBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -40,6 +42,12 @@ public class CuttingBoardBlock extends BaseEntityBlock {
     }
 
     @Override
+    public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
+        BlockPos blockpos = pPos.below();
+        return canSupportRigidBlock(pLevel, blockpos) || canSupportCenter(pLevel, blockpos, Direction.UP);
+    }
+
+    @Override
     public RenderShape getRenderShape(BlockState pState) {
         return RenderShape.MODEL;
     }
@@ -65,7 +73,7 @@ public class CuttingBoardBlock extends BaseEntityBlock {
                     if(player.isCrouching()){
                         player.openMenu((CuttingBoardBlockEntity)entity, pPos);
                     }else{
-                        
+
                     }
                 } else {
                     throw new IllegalStateException("Our Container provider is missing!");
