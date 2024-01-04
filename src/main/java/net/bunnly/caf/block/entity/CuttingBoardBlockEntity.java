@@ -164,4 +164,36 @@ public class CuttingBoardBlockEntity extends BlockEntity implements MenuProvider
     private boolean hasProgressFinished() {
         return true;
     }
+
+    public boolean setItem(ItemStack itemStack){
+        if (isEmpty() && !itemStack.isEmpty()) {
+            itemHandler.setStackInSlot(INPUT_SLOT, itemStack.split(1));
+            progress = 0;
+            setChanged();
+            return true;
+        }
+        return false;
+    }
+
+    public ItemStack removeItem(){
+        if (!isEmpty()) {
+            progress = 0;
+            ItemStack item = getStoredItem().split(1);
+            setChanged();
+            return item;
+        }
+        return ItemStack.EMPTY;
+    }
+
+    public IItemHandler getInventory(){
+        return itemHandler;
+    }
+
+    public ItemStack getStoredItem(){
+        return itemHandler.getStackInSlot(INPUT_SLOT);
+    }
+
+    public boolean isEmpty(){
+        return itemHandler.getStackInSlot(INPUT_SLOT).isEmpty();
+    }
 }

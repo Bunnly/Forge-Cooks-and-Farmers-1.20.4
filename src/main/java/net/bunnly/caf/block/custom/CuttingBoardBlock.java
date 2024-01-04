@@ -6,14 +6,20 @@ import net.bunnly.caf.block.entity.CuttingBoardBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -48,6 +54,11 @@ public class CuttingBoardBlock extends BaseEntityBlock {
     }
 
     @Override
+    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
+        return pDirection == Direction.DOWN && !this.canSurvive(pState, pLevel, pPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
+    }
+
+    @Override
     public RenderShape getRenderShape(BlockState pState) {
         return RenderShape.MODEL;
     }
@@ -69,19 +80,32 @@ public class CuttingBoardBlock extends BaseEntityBlock {
         if(pPlayer instanceof ServerPlayer player){
             if (!pLevel.isClientSide()) {
                 BlockEntity entity = pLevel.getBlockEntity(pPos);
+                ItemStack heldItem = player.getItemInHand(pHand);
                 if(entity instanceof CuttingBoardBlockEntity) {
+                    CuttingBoardBlockEntity blockEntity = (CuttingBoardBlockEntity) entity;
                     if(player.isCrouching()){
                         player.openMenu((CuttingBoardBlockEntity)entity, pPos);
+                        return InteractionResult.SUCCESS;
+                    }else if(!heldItem.isEmpty()){
+                        if(blockEntity.isEmpty()){
+                            blockEntity.setItem(heldItem);
+                            pLevel.playSound(null, pPos, SoundEvents.WOOD_PLACE, SoundSource.BLOCKS);
+                            return InteractionResult.SUCCESS;
+                        }
                     }else{
-
+                        if(!blockEntity.isEmpty()){
+                            if(player.isCreative()){
+                                blockEntity.removeItem();
+                            }else{
+                                Containers.dropItemStack(pLevel, pPos.getX(), pPos.getY(), pPos.getZ(), blockEntity.removeItem());
+                            }
+                            return InteractionResult.SUCCESS;
+                        }
                     }
-                } else {
-                    throw new IllegalStateException("Our Container provider is missing!");
                 }
             }
         }
-
-        return InteractionResult.sidedSuccess(pLevel.isClientSide());
+        return InteractionResult.PASS;
     }
 
     @Nullable
