@@ -1,7 +1,7 @@
 {
-  "variants" : {
-    "" : {
-      "model" : "caf:block/oak_food_crate"
+  "variants": {
+    "": {
+      "model": "caf:block/oak_food_crate"
     }
   }
 }

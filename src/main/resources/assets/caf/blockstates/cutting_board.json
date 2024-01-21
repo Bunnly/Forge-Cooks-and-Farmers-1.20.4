@@ -1,7 +1,7 @@
 {
-  "variants" : {
-    "" : {
-      "model" : "caf:block/cutting_board"
+  "variants": {
+    "": {
+      "model": "caf:block/cutting_board"
     }
   }
 }

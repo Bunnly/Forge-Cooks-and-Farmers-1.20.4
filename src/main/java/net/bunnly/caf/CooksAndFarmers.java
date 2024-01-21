@@ -1,12 +1,12 @@
 package net.bunnly.caf;
 
 import com.mojang.logging.LogUtils;
-import net.bunnly.caf.block.CafBlocks;
-import net.bunnly.caf.block.entity.CafBlockEntities;
-import net.bunnly.caf.item.CafCreativeTabs;
-import net.bunnly.caf.item.CafItems;
-import net.bunnly.caf.screen.CafMenuTypes;
-import net.bunnly.caf.screen.CuttingBoardScreen;
+import net.bunnly.caf.common.registry.ModBlocks;
+import net.bunnly.caf.common.registry.ModBlockEntities;
+import net.bunnly.caf.common.registry.ModCreativeTabs;
+import net.bunnly.caf.common.registry.ModItems;
+import net.bunnly.caf.common.registry.ModMenuTypes;
+import net.bunnly.caf.common.screen.CuttingBoardScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -33,13 +33,13 @@ public class CooksAndFarmers
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        CafCreativeTabs.register(modEventBus);
+        ModCreativeTabs.register(modEventBus);
 
-        CafItems.register(modEventBus);
-        CafBlocks.register(modEventBus);
+        ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
 
-        CafBlockEntities.register(modEventBus);
-        CafMenuTypes.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
+        ModMenuTypes.register(modEventBus);
 
         modEventBus.addListener(this::commonSetup);
 
@@ -72,7 +72,7 @@ public class CooksAndFarmers
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
-            MenuScreens.register(CafMenuTypes.CUTTING_BOARD_MENU.get(), CuttingBoardScreen::new);
+            MenuScreens.register(ModMenuTypes.CUTTING_BOARD_MENU.get(), CuttingBoardScreen::new);
         }
     }
 }

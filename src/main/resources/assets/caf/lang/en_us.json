@@ -2,5 +2,12 @@
   "block.caf.oak_food_crate" : "Oak Food Crate",
   "block.caf.cutting_board" : "Cutting Board",
 
+  "item.caf.iron_knife" : "Iron Knife",
+  "item.caf.wooden_knife" : "Wooden Knife",
+  "item.caf.stone_knife" : "Stone Knife",
+  "item.caf.golden_knife" : "Golden Knife",
+  "item.caf.diamond_knife" : "Diamond Knife",
+  "item.caf.netherite_knife" : "Netherite Knife",
+
   "creativetab.caf" : "Cooks and Farmers"
 }

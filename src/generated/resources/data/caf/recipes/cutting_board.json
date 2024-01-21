@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "tag": "minecraft:wooden_slabs"
+    }
+  },
+  "pattern": [
+    "   ",
+    " XX",
+    " XX"
+  ],
+  "result": {
+    "item": "caf:cutting_board"
+  }
+}
